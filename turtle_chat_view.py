@@ -9,7 +9,9 @@
 #Finally, from the turtle_chat_widgets module, import two classes: Button and TextInput
 #####################################################################################
 #####################################################################################
-
+import turtle
+from turtle_chat_client import Client
+from turtle_chat_widgets import Button , TextInput
 #####################################################################################
 #                                   TextBox                                         #
 #####################################################################################
@@ -35,6 +37,29 @@
 #
 #3. If you want to make a newline character (i.e. go to the next line), just add
 #   \r to your string.  Test it out at the Python shell for practice
+
+class TextBox(TextInput):
+    def draw_box(self):
+        self.pos=(-200,-200)
+        turtle.hideturtle()
+        self.writer.penup()
+        self.writer.goto(self.pos)
+        self.writer.pendown()
+        self.writer.goto(self.width,-200)
+        self.writer.goto(self.width,self.height)
+        self.writer.goto(-200,self.height)
+        self.writer.goto(self.pos)
+        
+
+    def write_msg(self):
+        self.writer.write(input)
+        
+        
+        
+        
+
+        
+        
 #####################################################################################
 #####################################################################################
 
@@ -55,10 +80,15 @@
 #      you send messages and update message displays.
 #####################################################################################
 #####################################################################################
-
+class SendButton(Button):
+    def __init__(self,view):
+        def fun(self,x=None,y=None):
+            Client.send(self.get_msg())
+        
+        
 
 ##################################################################
-#                             View                               #
+#                 View                               #
 ##################################################################
 #Make a new class called View.  It does not need to have a parent
 #class mentioned explicitly.
@@ -80,11 +110,15 @@ class View:
         ###
         #Store the username and partner_name into the instance.
         ###
+        username=self.username
+        partner_name=self.partner_name
+        
 
         ###
         #Make a new client object and store it in this instance of View
         #(i.e. self).  The name of the instance should be my_client
         ###
+        my_client=self.Client
 
         ###
         #Set screen dimensions using turtle.setup
