@@ -11,7 +11,8 @@
 #####################################################################################
 import turtle
 from turtle_chat_client import Client
-from turtle_chat_widgets import Button , TextInput
+from turtle_chat_widgets import Button
+from turtle_chat_widgets import TextInput
 #####################################################################################
 #                                   TextBox                                         #
 #####################################################################################
@@ -53,6 +54,8 @@ class TextBox(TextInput):
 
     def write_msg(self):
         self.writer.write(input)
+        self.writer.clear()
+        
         
         
         
@@ -82,8 +85,10 @@ class TextBox(TextInput):
 #####################################################################################
 class SendButton(Button):
     def __init__(self,view):
-        def fun(self,x=None,y=None):
-            Client.send(self.get_msg())
+        super(SendButton,self).__init__()
+        self.view=view
+    def fun(self,x=None,y=None):
+        self.view.send_msg()
         
         
 
