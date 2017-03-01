@@ -11,8 +11,7 @@
 #####################################################################################
 import turtle
 from turtle_chat_client import Client
-from turtle_chat_widgets import Button
-from turtle_chat_widgets import TextInput
+from turtle_chat_widgets import Button , TextInput
 #####################################################################################
 #                                   TextBox                                         #
 #####################################################################################
@@ -41,26 +40,28 @@ from turtle_chat_widgets import TextInput
 
 class TextBox(TextInput):
     def draw_box(self):
-        self.pos=(-200,-200)
-        turtle.hideturtle()
+        turtle.bgcolor("Coral2")
+        self.writer.hideturtle()
         self.writer.penup()
-        self.writer.goto(self.pos)
+        self.writer.goto(-100,100)
         self.writer.pendown()
-        self.writer.goto(self.width,-200)
-        self.writer.goto(self.width,self.height)
-        self.writer.goto(-200,self.height)
-        self.writer.goto(self.pos)
-        
+        self.writer.goto(100,100)
+        self.writer.goto(100,0)
+        self.writer.goto(-100,0)
+        self.writer.goto(-100,100)
+        self.writer.penup()
+        self.writer.hideturtle()
+    
 
     def write_msg(self):
-        self.writer.write(input)
         self.writer.clear()
+        self.writer.penup()
+        self.writer.goto(-20,45)
+        self.writer.pendown()
+        self.writer.write(self.new_msg)
+        self.writer.penup()
+    
         
-        
-        
-        
-        
-
         
         
 #####################################################################################
@@ -84,12 +85,14 @@ class TextBox(TextInput):
 #####################################################################################
 #####################################################################################
 class SendButton(Button):
-    def __init__(self,view):
-        super(SendButton,self).__init__()
-        self.view=view
-    def fun(self,x=None,y=None):
+    def __init__(self,my_turtle=None,shape=None,pos=(0,-260),view=None):
+        super(SendButton,self).__init__(my_turtle,shape,pos)
+        self.view = view
+        
+    def fun(self,x = None,y = None):
         self.view.send_msg()
         
+
         
 
 ##################################################################
@@ -115,16 +118,17 @@ class View:
         ###
         #Store the username and partner_name into the instance.
         ###
-        username=self.username
-        partner_name=self.partner_name
+        self.username = username
+        self.partner_name = partner_name
         
 
         ###
         #Make a new client object and store it in this instance of View
         #(i.e. self).  The name of the instance should be my_client
         ###
-        my_client=self.Client
-
+        self.my_client=Client()
+    
+        
         ###
         #Set screen dimensions using turtle.setup
         #You can get help on this function, as with other turtle functions,
@@ -135,7 +139,8 @@ class View:
         #
         #at the Python shell.
         ###
-
+        turtle.setup(self._SCREEN_WIDTH,self._SCREEN_HEIGHT)
+        
         ###
         #This list will store all of the messages.
         #You can add strings to the front of the list using
@@ -155,13 +160,19 @@ class View:
         #Create a TextBox instance and a SendButton instance and
         #Store them inside of this instance
         ###
-
+        self.sendbutton=SendButton(view=self)
+        self.textbox=TextBox()
+        
         ###
         #Call your setup_listeners() function, if you have one,
         #and any other remaining setup functions you have invented.
         ###
+        self.setup_listeners()
+        
 
     def send_msg(self):
+    
+        
         '''
         You should implement this method.  It should call the
         send() method of the Client object stored in this View
@@ -171,7 +182,12 @@ class View:
         It should call self.display_msg() to cause the message
         display to be updated.
         '''
-        pass
+        self.my_client.send(self.textbox.new_msg)
+        self.msg_queue.insert(0,self.textbox.new_msg)
+        self.textbox.clear_msg()
+        self.display_msg()
+        
+        
 
     def get_msg(self):
         return self.textbox.get_msg()
@@ -179,6 +195,8 @@ class View:
     
 
     def setup_listeners(self):
+    
+        
         '''
         Set up send button - additional listener, in addition to click,
         so that return button will send a message.
@@ -189,8 +207,10 @@ class View:
 
         Then, it can call turtle.listen()
         '''
-        pass
+       
+        turtle.listen()
 
+        
     def msg_received(self,msg):
         '''
         This method is called when a new message is received.
@@ -208,20 +228,27 @@ class View:
         #Then, call the display_msg method to update the display
 
     def display_msg(self):
-        '''
-        This method should update the messages displayed in the screen.
-        You can get the messages you want from self.msg_queue
-        '''
-        pass
+     
+
+            '''                                
+            This method should update the messages displayed in the screen.
+            You can get the messages you want from self.msg_queue
+    '''
+            for i in range(5):
+                self.msg_queue_turtle(i).clear()
+            for i in range (5):
+                self.msg_queue_turtle[t].write(self.msg_queue[t])
+                
+        
 
     def get_client(self):
         return self.my_client
-##############################################################
-##############################################################
+       
+
 
 
 #########################################################
-#Leave the code below for now - you can play around with#
+#Leave the code below for now - you can play around with #
 #it once you have a working view, trying to run you chat#
 #view in different ways.                                #
 #########################################################
